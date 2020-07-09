@@ -1,0 +1,8 @@
+body {
+  margin: 0;
+  background: repeating-radial-gradient(  circle,
+  #347a9d,
+  #347a9d 10px,
+  #216187 10px, 
+  #216187 20px);
+}
