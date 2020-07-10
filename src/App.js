@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { Component } from 'react'
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Switch, Route } from 'react-router-dom';
+import InicialPage from './componentes/InicitialPage'
+import PersonajePag from './componentes/PersonajePag'
 
-function App() {
-  return (
-    <div className="App">
-      <div className='col1 pt-2'>Super Heroes
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Switch>
+          <Route exact path='/' component={InicialPage} />
+          <Route exact path='/personajeInfo/:personajeId' component={PersonajePag}/>
+        </Switch>
       </div>
-      <div  className='col2 m-0'></div>
-    </div>
-  );
+    )
+  }
 }
 
-export default App;
+export default App
