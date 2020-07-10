@@ -1,20 +1,30 @@
 import React, { Component } from 'react'
-import { Col, Container, Row, ProgressBar, Spinner } from 'react-bootstrap'
+import { Col, Container, Row, ProgressBar, Spinner, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
 export default class PersonajePag extends Component {
   constructor (props){
     super(props)
     this.state = {
       url:'https://cors-anywhere.herokuapp.com/https://superheroapi.com/api/10220603223407783/',
-      personaje: []
+      personaje: [],
+      like: ''
     }
     this.upLoad = this.upLoad.bind(this)
   }
 
   componentDidMount () {
     this.upLoad()
+    const { match } = this.props;
+    if (localStorage.getItem(match.params.personajeName) !== null) {
+      const state = JSON.parse(localStorage.getItem(match.params.personajeName))
+      this.setState({
+        like: state.like
+      })
+    } 
   }
 
   async upLoad() {
@@ -26,7 +36,56 @@ export default class PersonajePag extends Component {
       this.setState({ personaje: res.data }); 
     } catch (error) {
       console.log(error)
-    }   
+    }  
+  }
+
+  onClick = (e) => {    
+    const { personaje } = this.state
+    const info = e.target.value
+    if (info === 'Like'){
+      const { like } = this.state
+      if ( like === '' || like === false) {
+        this.setState({
+          like: true
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: true}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      } else if ( like === true ) {
+        this.setState({
+          like: ''
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: ''}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      }
+
+    } else if (info === 'DonotLike'){
+      const { like } = this.state
+      if ( like === '' || like === true) {
+        this.setState({
+          like: false
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: false}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      } else if ( like === false ) {
+        this.setState({
+          like: ''
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: ''}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      }
+    }
   }
 
   componentWillUnmount () {
@@ -63,8 +122,12 @@ export default class PersonajePag extends Component {
               <Col className='col-12 mt-3 text-center'>Height: {personaje.appearance.height[1]}</Col>
               <Col className='col-12 mt-3 text-center'>Weight: {personaje.appearance.weight[1]}</Col>              
               <Col className='col-12 mt-3 text-center'>Publisher: {personaje.biography.publisher}</Col>
-              <Col className='m-4 rounded'><Link to='/'><h5 className='back'>Back</h5></Link></Col>
-            </Row>              
+              <Col className='col-12 my-4 rounded d-flex justify-content-center'>
+              {this.state.like === true ? <Button variant="success" className='mx-auto btn' onClick={this.onClick} value='Like'>Like</Button> : <Button variant="primary" className='mx-auto btn' onClick={this.onClick} value='Like'>Like</Button> }
+              {this.state.like === false ? <Button variant="success" className='mx-auto btn' onClick={this.onClick}  value='DonotLike'>Don't Like</Button>  : <Button variant="danger" className='mx-auto btn' onClick={this.onClick}  value='DonotLike'>Don't Like</Button> }
+              </Col>
+              <Col className='m-4 rounded'><Link to='/'><h5 className='back'> <FontAwesomeIcon icon={faChevronLeft} />Back</h5></Link></Col>
+            </Row>       
           </Container>
         </>
         }

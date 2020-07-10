@@ -3,13 +3,79 @@ import { Card, Button, Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 export default class CardPersonaje extends Component {
+  constructor(){
+    super()
+    this.state = {
+      like: ''
+    }
+  }
+
+  componentDidMount () {
+    const { personaje } = this.props
+    if (localStorage.getItem(personaje.name) !== null) {
+      const state = JSON.parse(localStorage.getItem(personaje.name))
+      this.setState({
+        like: state.like
+      })
+
+    }
+  }
+
+  onClick = (e) => {    
+    const { personaje } = this.props
+    const info = e.target.value
+    if (info === 'Like'){
+      const { like } = this.state
+      if ( like === '' || like === false) {
+        this.setState({
+          like: true
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: true}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      } else if ( like === true ) {
+        this.setState({
+          like: ''
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: ''}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      }
+
+    } else if (info === 'DonotLike'){
+      const { like } = this.state
+      if ( like === '' || like === true) {
+        this.setState({
+          like: false
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: false}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      } else if ( like === false ) {
+        this.setState({
+          like: ''
+        })
+        const superheroe = {
+          id: personaje.id,
+          name: personaje.name,
+          like: ''}
+        localStorage.setItem(personaje.name, JSON.stringify(superheroe))
+      }
+    }
+  }
+
   render() {
     const { personaje } = this.props
-    console.log(personaje)
     return (
       <Col xs={12} sm={6} md={4} lg={4} className='mb-4'>
         <Card >
-          <Link to={`/personajeInfo/${personaje.id}/`}><Card.Img variant="top" src={personaje.image.url} className='imagePersonaje'/></Link>
+          <Link to={`/personajeInfo/${personaje.id}/${personaje.name}/`}><Card.Img variant="top" src={personaje.image.url} className='imagePersonaje'/></Link>
           <Card.Body className='p-2 cardbody'>
             <Card.Title className='text-center'><h3>{personaje.name}</h3></Card.Title>
             <Container>
@@ -23,8 +89,8 @@ export default class CardPersonaje extends Component {
             </Container>
             <Container>
               <Row className='my-auto'>
-                <Button variant="primary" className='mx-auto btn' >Link</Button>
-                <Button variant="danger" className='mx-auto btn'>Don't Like</Button>
+                {this.state.like === true ? <Button variant="success" className='mx-auto btn' onClick={this.onClick} value='Like'>Like</Button> : <Button variant="primary" className='mx-auto btn' onClick={this.onClick} value='Like'>Like</Button> }
+                {this.state.like === false ? <Button variant="success" className='mx-auto btn' onClick={this.onClick}  value='DonotLike'>Don't Like</Button>  : <Button variant="danger" className='mx-auto btn' onClick={this.onClick}  value='DonotLike'>Don't Like</Button> }
               </Row>
             </Container>
           </Card.Body>
