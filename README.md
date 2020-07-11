@@ -19,3 +19,4 @@ Run `npm run build`
 
 ## Deploy 
 For the deploy use vercel now
+https://super-heroes-omega.vercel.app/
