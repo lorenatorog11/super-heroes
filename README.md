@@ -8,6 +8,7 @@ You'll need Node.js on your local development machine.
 3. Run `npm install react-bootstrap bootstrap`
 4. Run `npm i --save @fortawesome/fontawesome-svg-core  @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome`
 5. Run `npm i react-paginate --save`
+6. API `https://superheroapi.com/`
 
 ## Up and running
 1. Run `npm start`
